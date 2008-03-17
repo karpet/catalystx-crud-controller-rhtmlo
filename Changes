@@ -35,3 +35,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 0.10    29 Jan 2008
         * fix bug to allow for PKs that are not serial ints
 
+0.11    xxx
+        * add all_form_errors() method
+

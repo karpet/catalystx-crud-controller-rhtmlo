@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use NEXT;
 use Carp;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 =head1 NAME
 
@@ -70,6 +70,7 @@ sub form {
         $self->{_form}->clear unless $c->stash->{_form_called}++;
         $self->{_form}->app($c);
     }
+    $self->NEXT::form($c);
     return $self->{_form};
 }
 
@@ -82,6 +83,22 @@ Returns an array ref of the field names in form.
 sub field_names {
     my ($self) = @_;
     return $self->form->field_names;
+}
+
+=head2 all_form_errors
+
+Convenience method for aggregating all form errors. Returns a single
+scalar string.
+
+=cut
+
+sub all_form_errors {
+    my ( $self, $form ) = @_;
+    my @err;
+    for my $f ( $form->fields ) {
+        push( @err, $f->error ) if $f->error;
+    }
+    return join( "\n", @err );
 }
 
 =head2 form_to_object( I<context> )
@@ -117,6 +134,9 @@ sub form_to_object {
     # return if there was a problem with any param values
     unless ( $form->validate() ) {
         $c->stash->{error} = $form->error;    # NOT throw_error()
+        $c->log->debug(
+            "RHTMLO: form error: " . $self->all_form_errors($form) )
+            if $c->debug;
         $c->stash->{template} ||= $self->default_template;    # MUST specify
         return 0;
     }
@@ -206,8 +226,6 @@ L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=CatalystX-CRUD-Controller-RHTMLO>
 L<http://search.cpan.org/dist/CatalystX-CRUD-Controller-RHTMLO>
 
 =back
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 COPYRIGHT & LICENSE
 
