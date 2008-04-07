@@ -94,9 +94,9 @@ scalar string.
 
 sub all_form_errors {
     my ( $self, $form ) = @_;
-    my @err;
+    my @err = ( $form->error );
     for my $f ( $form->fields ) {
-        push( @err, $f->error ) if $f->error;
+        push( @err, $f->name . ': ' . $f->error ) if $f->error;
     }
     return join( "\n", @err );
 }
@@ -120,7 +120,9 @@ sub form_to_object {
     my $id = $c->req->params->{$pk} || $c->stash->{object_id};
 
     # initialize the form with the object's values
-    $form->$form_meth( $obj->delegate );
+    # TODO this might not work if the delegate() does not have
+    # 1-to-1 mapping of form fields to object methods.
+    $form->$form_meth( $obj );
 
     # set param values from request
     $form->params( $c->req->params );
@@ -135,14 +137,17 @@ sub form_to_object {
     unless ( $form->validate() ) {
         $c->stash->{error} = $form->error;    # NOT throw_error()
         $c->log->debug(
-            "RHTMLO: form error: " . $self->all_form_errors($form) )
+            "RHTMLO: form error:\n" . $self->all_form_errors($form) )
             if $c->debug;
         $c->stash->{template} ||= $self->default_template;    # MUST specify
         return 0;
     }
 
     # re-set object's values from the now-valid form
-    $form->$obj_meth( $obj->delegate );
+    # TODO this might not work if the delegate() does not have
+    # 1-to-1 mapping of form fields to object methods.
+    # this is same objection as $form_metho call above
+    $form->$obj_meth( $obj );
 
     # set id explicitly since there's some bug
     # with param() setting it in save()

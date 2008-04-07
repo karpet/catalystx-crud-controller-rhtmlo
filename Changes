@@ -37,4 +37,8 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 
 0.11    xxx
         * add all_form_errors() method
+        * now passes $obj instead of $obj->delegate to form/object init methods.
+          This relies on the AUTOLOAD magic in CX::CRUD::Object to work correctly,
+          but it means that authors can have more methods than just the c/r/u/d
+          types on their Object wrappers (as CX::CRUD::Object::File does).
 

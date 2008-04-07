@@ -10,7 +10,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
-        'CatalystX::CRUD' => 0.20,
+        'CatalystX::CRUD' => 0.26,
 
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
