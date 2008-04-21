@@ -1,8 +1,8 @@
 package CatalystX::CRUD::Controller::RHTMLO;
 use strict;
 use base qw( CatalystX::CRUD::Controller );
-use NEXT;
 use Carp;
+use Class::C3;
 
 our $VERSION = '0.11';
 
@@ -70,7 +70,6 @@ sub form {
         $self->{_form}->clear unless $c->stash->{_form_called}++;
         $self->{_form}->app($c);
     }
-    $self->NEXT::form($c);
     return $self->{_form};
 }
 
@@ -183,7 +182,7 @@ sub do_search {
     $c->stash->{form}->params( $c->req->params );
     $c->stash->{form}->init_fields();
 
-    return $self->NEXT::do_search( $c, scalar $c->stash->{form}->field_names,
+    return $self->next::method( $c, scalar $c->stash->{form}->field_names,
         @arg );
 }
 
