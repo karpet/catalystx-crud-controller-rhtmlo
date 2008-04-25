@@ -41,4 +41,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
           This relies on the AUTOLOAD magic in CX::CRUD::Object to work correctly,
           but it means that authors can have more methods than just the c/r/u/d
           types on their Object wrappers (as CX::CRUD::Object::File does).
+        * use Class::C3
+        * prime object as well as form in create() 
 

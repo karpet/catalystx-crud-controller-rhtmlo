@@ -39,12 +39,16 @@ with param-based values.
 
 sub create : Local {
     my ( $self, $c ) = @_;
-    $c->forward( 'fetch', [0] );
-    $c->forward('edit');
+    $self->next::method($c);
+
+    # allow for params to be passed in to seed the form/object
     for my $field ( $self->field_names ) {
         if ( exists $c->req->params->{$field} ) {
             $c->stash->{form}
                 ->field_value( $field, $c->req->params->{$field} );
+            if ( $c->stash->{object}->can($field) ) {
+                $c->stash->{object}->$field( $c->req->params->{$field} );
+            }
         }
     }
 }
@@ -121,7 +125,7 @@ sub form_to_object {
     # initialize the form with the object's values
     # TODO this might not work if the delegate() does not have
     # 1-to-1 mapping of form fields to object methods.
-    $form->$form_meth( $obj );
+    $form->$form_meth($obj);
 
     # set param values from request
     $form->params( $c->req->params );
@@ -146,7 +150,7 @@ sub form_to_object {
     # TODO this might not work if the delegate() does not have
     # 1-to-1 mapping of form fields to object methods.
     # this is same objection as $form_metho call above
-    $form->$obj_meth( $obj );
+    $form->$obj_meth($obj);
 
     # set id explicitly since there's some bug
     # with param() setting it in save()
