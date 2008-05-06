@@ -35,7 +35,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 0.10    29 Jan 2008
         * fix bug to allow for PKs that are not serial ints
 
-0.11    xxx
+0.11    06 May 2008
         * add all_form_errors() method
         * now passes $obj instead of $obj->delegate to form/object init methods.
           This relies on the AUTOLOAD magic in CX::CRUD::Object to work correctly,
