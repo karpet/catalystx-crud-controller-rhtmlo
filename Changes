@@ -44,3 +44,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
         * use Class::C3
         * prime object as well as form in create() 
 
+0.12    30 May 2008
+        * pass $c in to form->new() as value to 'app' param, as well as setting in in app() method.
+          this is so that $c is available to build_form() et al.
+

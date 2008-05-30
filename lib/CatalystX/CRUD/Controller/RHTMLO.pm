@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use Carp;
 use Class::C3;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 =head1 NAME
 
@@ -53,15 +53,15 @@ sub create : Local {
     }
 }
 
-=head2 form( [ I<context> ] )
+=head2 form( I<context> )
 
 Returns an instance of config->{form_class}. 
 A single form object is instantiated and cached in the controller object.
 The form's clear() method is called before returning.
-If I<context> object is passed it is stashed via the forms's app() method.
+I<context> object is set in forms's app() method.
 
 B<NOTE:> The form is cleared only the B<first time>
-form() is called in each request cycle, and only if I<content> is present.
+form() is called in each request cycle.
 This is B<different> than the behaviour described in 
 CatalystX::CRUD::Controller.
 
@@ -69,11 +69,9 @@ CatalystX::CRUD::Controller.
 
 sub form {
     my ( $self, $c ) = @_;
-    $self->{_form} ||= $self->form_class->new;
-    if ($c) {
-        $self->{_form}->clear unless $c->stash->{_form_called}++;
-        $self->{_form}->app($c);
-    }
+    $self->{_form} ||= $self->form_class->new( app => $c );
+    $self->{_form}->app($c) unless defined $self->{_form}->app;
+    $self->{_form}->clear unless $self->{_form}->app->stash->{_form_called}++;
     return $self->{_form};
 }
 
