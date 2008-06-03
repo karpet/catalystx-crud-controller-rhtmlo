@@ -47,6 +47,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 0.12    xxx
         * pass $c in to form->new() as value to 'app' param, as well as setting in in app() method.
           this is so that $c is available to build_form() et al.
-        * cache field_names() to avoid needing $c every time form() is called.
+        * field_names() now requires $c (context) be passed
+
 
 
