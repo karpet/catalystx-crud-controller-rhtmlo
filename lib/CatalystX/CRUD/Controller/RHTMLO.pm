@@ -70,8 +70,9 @@ CatalystX::CRUD::Controller.
 sub form {
     my ( $self, $c ) = @_;
     $self->{_form} ||= $self->form_class->new( app => $c );
+    $self->{_field_names} ||= $self->{_form}->field_names;
     $self->{_form}->app($c) unless defined $self->{_form}->app;
-    $self->{_form}->clear unless $self->{_form}->app->stash->{_form_called}++;
+    $self->{_form}->clear unless $self->{_form}->app->stash->{_form_called}->{ $self->action_namespace }++;
     return $self->{_form};
 }
 
@@ -83,7 +84,7 @@ Returns an array ref of the field names in form.
 
 sub field_names {
     my ($self) = @_;
-    return $self->form->field_names;
+    return $self->{_field_names};
 }
 
 =head2 all_form_errors
