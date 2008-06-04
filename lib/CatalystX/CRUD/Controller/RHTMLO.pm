@@ -42,7 +42,7 @@ sub create : Local {
     $self->next::method($c);
 
     # allow for params to be passed in to seed the form/object
-    for my $field ( $self->field_names ) {
+    for my $field ( $self->field_names($c) ) {
         if ( exists $c->req->params->{$field} ) {
             $c->stash->{form}
                 ->field_value( $field, $c->req->params->{$field} );
