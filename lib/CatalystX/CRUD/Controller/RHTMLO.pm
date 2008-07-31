@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use Carp;
 use Class::C3;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 =head1 NAME
 
@@ -116,10 +116,10 @@ sub form_to_object {
     my $obj       = $c->stash->{object};
     my $obj_meth  = $self->init_object;
     my $form_meth = $self->init_form;
-    my $pk        = $self->primary_key;
-
+    
     # id always comes from url but not necessarily from form
-    my $id = $c->req->params->{$pk} || $c->stash->{object_id};
+    my $id = $c->stash->{object_id};
+    my %pk = $self->get_primary_key( $c, $id );
 
     # initialize the form with the object's values
     # TODO this might not work if the delegate() does not have
@@ -128,7 +128,9 @@ sub form_to_object {
 
     # set param values from request
     $form->params( $c->req->params );
-    $form->param( $pk => $id );
+    for my $field ( keys %pk ) {
+        $form->param( $field => $pk{$field} );
+    }
 
     # override form's values with those from params
     # no_clear is important because we already initialized with object
@@ -151,22 +153,26 @@ sub form_to_object {
     # this is same objection as $form_metho call above
     $form->$obj_meth($obj);
 
-    # set id explicitly since there's some bug
-    # with param() setting it in save()
-    $obj->$pk($id);
+    # set PK(s) explicitly
+    for my $field ( keys %pk ) {
+        $obj->$field( $pk{$field} );
+    }
 
     # let serial column work its magic
-    $obj->$pk(undef)
-        if ( !$obj->$pk || $obj->$pk eq '0' || $id eq '0' );
-
-    #carp "object $pk == $id ? " . $obj->$pk;
+    # if this is a first-time save (create)
+    if ( scalar( keys %pk ) == 1 or $id eq '0' ) {
+        my ( $field, $value ) = each %pk;
+        $obj->$field(undef)
+            if ( !$obj->$field || $obj->$field eq '0' || $value eq '0' );
+    }
 
     return $obj;
 }
 
 =head2 do_search( I<context>, I<arg> )
 
-Makes form values sticky then calls the base do_search() method with NEXT.
+Makes form values sticky then calls the base do_search() method with 
+next::method().
 
 =cut
 

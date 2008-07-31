@@ -50,4 +50,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
         * field_names() now requires $c (context) be passed
 
 
+0.13    xxx
+        * change form_to_object() to support PKs of multiple columns
 
