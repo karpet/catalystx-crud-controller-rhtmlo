@@ -10,7 +10,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
-        'CatalystX::CRUD' => 0.26,
+        'CatalystX::CRUD' => 0.28,
         'Rose::HTML::Objects' => 0,
 
     },

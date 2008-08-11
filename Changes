@@ -50,6 +50,10 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
         * field_names() now requires $c (context) be passed
 
 
-0.13    xxx
+0.13    11 Aug 2008
         * change form_to_object() to support PKs of multiple columns
 
+0.14    11 Aug 2008
+        * fix Makefile.PL to reflect CXCRUD 0.28 required
+
+ 
