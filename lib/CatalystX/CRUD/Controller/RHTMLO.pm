@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use Carp;
 use Class::C3;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 =head1 NAME
 
@@ -71,7 +71,9 @@ sub form {
     my ( $self, $c ) = @_;
     $self->{_form} ||= $self->form_class->new( app => $c );
     $self->{_form}->app($c) unless defined $self->{_form}->app;
-    $self->{_form}->clear unless $self->{_form}->app->stash->{_form_called}->{ $self->action_namespace }++;
+    $self->{_form}->clear
+        unless $self->{_form}->app->stash->{_form_called}
+            ->{ $self->action_namespace }++;
     return $self->{_form};
 }
 
@@ -82,7 +84,7 @@ Returns an array ref of the field names in form.
 =cut
 
 sub field_names {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
     $self->throw_error("context required") unless defined $c;
     return $self->form($c)->field_names;
 }
@@ -116,7 +118,7 @@ sub form_to_object {
     my $obj       = $c->stash->{object};
     my $obj_meth  = $self->init_object;
     my $form_meth = $self->init_form;
-    
+
     # id always comes from url but not necessarily from form
     my $id = $c->stash->{object_id};
     my %pk = $self->get_primary_key( $c, $id );
@@ -160,11 +162,13 @@ sub form_to_object {
 
     # let serial column work its magic
     # if this is a first-time save (create)
-    if ( scalar( keys %pk ) == 1 or $id eq '0' ) {
-        my ( $field, $value ) = each %pk;
-        $obj->$field(undef)
-            if ( !$obj->$field || $obj->$field eq '0' || $value eq '0' );
+    #carp "serial column magic. id = $id. pk = " . Data::Dump::dump \%pk;
+    my $pk_method = $self->primary_key;
+    if ( !$id and !ref($pk_method) ) {
+        $obj->$pk_method(undef) if ( defined $obj->$pk_method );
     }
+
+    #Data::Dump::dump $obj;
 
     return $obj;
 }

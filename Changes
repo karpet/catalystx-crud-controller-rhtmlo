@@ -56,4 +56,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 0.14    11 Aug 2008
         * fix Makefile.PL to reflect CXCRUD 0.28 required
 
+0.15    24 Aug 2008
+        * fix the form_to_object() method to work with 0.29 core REST api
  
