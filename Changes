@@ -58,4 +58,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 
 0.15    24 Aug 2008
         * fix the form_to_object() method to work with 0.29 core REST api
+
+0.16    25 Aug 2008
+        * refactor the form_to_object() to avoid setting the PK value for a new object
  

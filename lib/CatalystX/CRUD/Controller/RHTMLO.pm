@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use Carp;
 use Class::C3;
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 =head1 NAME
 
@@ -128,10 +128,29 @@ sub form_to_object {
     # 1-to-1 mapping of form fields to object methods.
     $form->$form_meth($obj);
 
-    # set param values from request
-    $form->params( $c->req->params );
-    for my $field ( keys %pk ) {
-        $form->param( $field => $pk{$field} );
+    # set param values from request.
+    # we dereference req->params in order to avoid setting $id
+    # if it is an emptry string (as when submitting from create).
+    # This is mostly to fix the case where the PK is an auto-increment
+    # field, which we do not want to set in the object.
+    my %params = %{ $c->req->params };
+    if ( !$id ) {
+        my $pk_field = $self->primary_key;
+        if (    !ref($pk_field)
+            and defined $params{$pk_field}
+            and !length $params{$pk_field} )
+        {
+            delete $params{$pk_field};
+        }
+    }
+    $form->params( \%params );
+
+    # set PKs specifically, in case they are not submitted
+    # explicitly in form
+    if ($id) {
+        for my $field ( keys %pk ) {
+            $form->param( $field => $pk{$field} );
+        }
     }
 
     # override form's values with those from params
@@ -152,21 +171,8 @@ sub form_to_object {
     # re-set object's values from the now-valid form
     # TODO this might not work if the delegate() does not have
     # 1-to-1 mapping of form fields to object methods.
-    # this is same objection as $form_metho call above
+    # this is same objection as $form_method call above
     $form->$obj_meth($obj);
-
-    # set PK(s) explicitly
-    for my $field ( keys %pk ) {
-        $obj->$field( $pk{$field} );
-    }
-
-    # let serial column work its magic
-    # if this is a first-time save (create)
-    #carp "serial column magic. id = $id. pk = " . Data::Dump::dump \%pk;
-    my $pk_method = $self->primary_key;
-    if ( !$id and !ref($pk_method) ) {
-        $obj->$pk_method(undef) if ( defined $obj->$pk_method );
-    }
 
     #Data::Dump::dump $obj;
 
