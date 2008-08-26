@@ -28,31 +28,6 @@ The following methods are new or override base methods.
 
 =cut
 
-=head2 create
-
-Attribute: Local
-
-Overrides base create() to optionally pre-populate form
-with param-based values.
-
-=cut
-
-sub create : Local {
-    my ( $self, $c ) = @_;
-    $self->next::method($c);
-
-    # allow for params to be passed in to seed the form/object
-    for my $field ( $self->field_names($c) ) {
-        if ( exists $c->req->params->{$field} ) {
-            $c->stash->{form}
-                ->field_value( $field, $c->req->params->{$field} );
-            if ( $c->stash->{object}->can($field) ) {
-                $c->stash->{object}->$field( $c->req->params->{$field} );
-            }
-        }
-    }
-}
-
 =head2 form( I<context> )
 
 Returns an instance of config->{form_class}. 
