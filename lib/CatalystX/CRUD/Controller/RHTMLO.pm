@@ -4,7 +4,7 @@ use base qw( CatalystX::CRUD::Controller );
 use Carp;
 use Class::C3;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 =head1 NAME
 
