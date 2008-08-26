@@ -61,4 +61,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 
 0.16    25 Aug 2008
         * refactor the form_to_object() to avoid setting the PK value for a new object
+
+0.17    xxx
+        * change tact altogether in form_to_object() and assume there are no autoincrement fields in $form
  

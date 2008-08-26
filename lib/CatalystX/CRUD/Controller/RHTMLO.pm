@@ -119,7 +119,9 @@ sub form_to_object {
     my $obj_meth  = $self->init_object;
     my $form_meth = $self->init_form;
 
-    # id always comes from url but not necessarily from form
+    # id always comes from url but not necessarily from form,
+    # but in either case, $obj should already have %pk set
+    # since it was used in fetch()
     my $id = $c->stash->{object_id};
     my %pk = $self->get_primary_key( $c, $id );
 
@@ -129,29 +131,7 @@ sub form_to_object {
     $form->$form_meth($obj);
 
     # set param values from request.
-    # we dereference req->params in order to avoid setting $id
-    # if it is an emptry string (as when submitting from create).
-    # This is mostly to fix the case where the PK is an auto-increment
-    # field, which we do not want to set in the object.
-    my %params = %{ $c->req->params };
-    if ( !$id ) {
-        my $pk_field = $self->primary_key;
-        if (    !ref($pk_field)
-            and defined $params{$pk_field}
-            and !length $params{$pk_field} )
-        {
-            delete $params{$pk_field};
-        }
-    }
-    $form->params( \%params );
-
-    # set PKs specifically, in case they are not submitted
-    # explicitly in form
-    if ($id) {
-        for my $field ( keys %pk ) {
-            $form->param( $field => $pk{$field} );
-        }
-    }
+    $form->params( $c->req->params );
 
     # override form's values with those from params
     # no_clear is important because we already initialized with object
@@ -173,8 +153,6 @@ sub form_to_object {
     # 1-to-1 mapping of form fields to object methods.
     # this is same objection as $form_method call above
     $form->$obj_meth($obj);
-
-    #Data::Dump::dump $obj;
 
     return $obj;
 }
