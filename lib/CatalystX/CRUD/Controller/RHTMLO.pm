@@ -143,7 +143,7 @@ sub do_search {
     my ( $self, $c, @arg ) = @_;
 
     # make form sticky
-    $c->stash->{form} ||= $self->form;
+    $c->stash->{form} ||= $self->form($c);
 
     # if we have no input, just return for initial search
     if ( !@arg && !$c->req->param && $c->action->name eq 'search' ) {
