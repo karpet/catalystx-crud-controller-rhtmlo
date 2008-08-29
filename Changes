@@ -66,5 +66,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
         * change tact altogether in form_to_object() and assume there are no autoincrement fields in $form
         * move the form/object seeding in create() to the core Controller create() method. This change
           is as much to solve a strange Class::C3/Dispatcher issue with multiple inheritance as anything.
+        * add missing $c in call to $self->form
 
  
