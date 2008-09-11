@@ -62,10 +62,11 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 0.16    25 Aug 2008
         * refactor the form_to_object() to avoid setting the PK value for a new object
 
-0.17    xxx
+0.17    11 Sept 2008
         * change tact altogether in form_to_object() and assume there are no autoincrement fields in $form
         * move the form/object seeding in create() to the core Controller create() method. This change
           is as much to solve a strange Class::C3/Dispatcher issue with multiple inheritance as anything.
         * add missing $c in call to $self->form
+        * do_search calls field_names() on controller rather than form object
 
  

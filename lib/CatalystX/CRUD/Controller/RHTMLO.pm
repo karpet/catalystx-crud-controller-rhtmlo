@@ -154,8 +154,7 @@ sub do_search {
     $c->stash->{form}->params( $c->req->params );
     $c->stash->{form}->init_fields();
 
-    return $self->next::method( $c, scalar $c->stash->{form}->field_names,
-        @arg );
+    return $self->next::method( $c, scalar $self->field_names($c), @arg );
 }
 
 1;
