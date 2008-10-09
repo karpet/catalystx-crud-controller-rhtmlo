@@ -69,4 +69,6 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
         * add missing $c in call to $self->form
         * do_search calls field_names() on controller rather than form object
 
+0.18    09 Oct 2008
+        * fix bug where form was not cleared during initial search
  
