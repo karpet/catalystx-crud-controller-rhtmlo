@@ -71,4 +71,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 
 0.18    09 Oct 2008
         * fix bug where form was not cleared during initial search
+
+0.19    03 Dec 2008
+        * fix bug where form error was not set correctly
  
