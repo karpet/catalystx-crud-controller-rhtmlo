@@ -12,6 +12,7 @@ WriteMakefile(
         'Test::More' => 0,
         'CatalystX::CRUD' => 0.28,
         'Rose::HTML::Objects' => 0,
+        'MRO::Compat'         => 0,
 
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

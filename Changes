@@ -74,4 +74,7 @@ Revision history for CatalystX-CRUD-Controller-RHTMLO
 
 0.19    03 Dec 2008
         * fix bug where form error was not set correctly
+
+0.20    17 Feb 2010
+        * change from Class::C3 to MRO::Compat
  
