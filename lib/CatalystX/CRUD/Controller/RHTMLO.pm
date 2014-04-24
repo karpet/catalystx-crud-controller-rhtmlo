@@ -190,6 +190,10 @@ You can also look for information at:
 
 =over 4
 
+=item * Mailing List
+
+L<https://groups.google.com/forum/#!forum/catalystxcrud>
+
 =item * AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/CatalystX-CRUD-Controller-RHTMLO>
